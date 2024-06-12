@@ -24,14 +24,9 @@ export default function AdminLayout(props: DashboardLayoutProps) {
   // functions for changing the states from components
   const { onOpen } = useDisclosure();
 
-  useEffect(() => {
-    window.document.documentElement.dir = 'ltr';
-  });
-
-  const bg = useColorModeValue('brand.100', 'ditgray.900');
 
   return (
-    <Box>
+    <Box bg="gray.800">
       <Header />
       <Box as="main" flex="1">
         {children}

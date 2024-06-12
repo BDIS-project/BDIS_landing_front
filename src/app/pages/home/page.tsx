@@ -5,6 +5,7 @@ import { Box } from '@chakra-ui/react';
 import { useEffect, useState } from "react";
 
 import ProductShowcase from '@components/ProductShowcase';
+import Banner from '@components/Banner';
 
 import { fetchProducts } from "@/lib/fetchProducts";
 import { ProductList } from "@/interfaces";
@@ -27,6 +28,7 @@ export default function Home() {
 
   return (
     <Box>
+      <Banner />
       <ProductShowcase products={products} loading={loading}/>
     </Box>
   );
