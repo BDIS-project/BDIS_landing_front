@@ -17,17 +17,36 @@ import {
 import { useRouter } from 'next/navigation';
 import { ParsedUrlQueryInput } from 'querystring';
 
-export default function FilterBlock (){
+interface FilterBlockProps {
+    categories: string[];
+    prevQuery?: string;
+  }
+
+export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps){
     const [isMounted, setIsMounted] = useState(false);
   const [search, setSearch] = useState('');
   const [priceRange, setPriceRange] = useState([0, 10000]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [inStock, setInStock] = useState(true);
   const [sort, setSort] = useState('');
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+
+    // Parse query params from prevQuery and set initial state
+    if (prevQuery) {
+      const params = new URLSearchParams(prevQuery);
+
+      setSearch(params.get('search') || '');
+      setPriceRange([
+        Number(params.get('minPrice')) || 0,
+        Number(params.get('maxPrice')) || 10000,
+      ]);
+      setSelectedCategories((params.get('categories') || '').split(',').filter(Boolean));
+      setInStock(params.get('inStock') === 'true');
+      setSort(params.get('sort') || '');
+    }
+  }, [prevQuery]);
 
   const router = isMounted ? useRouter() : null;
 
@@ -40,9 +59,9 @@ export default function FilterBlock (){
   };
 
   const handleCategoryChange = (category: string) => {
-    setCategories(prevCategories =>
+    setSelectedCategories((prevCategories: string[]) =>
       prevCategories.includes(category)
-        ? prevCategories.filter(cat => cat !== category)
+        ? prevCategories.filter((cat: string) => cat !== category)
         : [...prevCategories, category]
     );
   };
@@ -62,7 +81,7 @@ export default function FilterBlock (){
         search,
         minPrice: priceRange[0],
         maxPrice: priceRange[1],
-        categories: categories.join(','),
+        categories: selectedCategories.join(','),
         inStock,
         sort,
       };
@@ -74,7 +93,8 @@ export default function FilterBlock (){
       });
 
       const searchParams = new URLSearchParams(query as ParsedUrlQueryInput).toString();
-      router.push(`/pages/home?${searchParams}`);
+      window.location.href = `/pages/home?${searchParams}`;
+      //router.replace(`/pages/home?${searchParams}`);
     }
   };
 
@@ -94,7 +114,7 @@ export default function FilterBlock (){
       </Box>
 
       <Box mb={4}>
-        <Text mb={2}>Price range</Text>
+        <Text mb={2}>Price range:</Text>
         <Flex align="center">
           <Input
             type="number"
@@ -120,12 +140,12 @@ export default function FilterBlock (){
       </Box>
 
       <Box mb={4}>
-        <Text mb={2}>Categories</Text>
+        <Text mb={2}>Categories:</Text>
         <Stack spacing={1}>
-          {['Smart TV', 'Ultra HD 4K', 'Телевізор з Wi-Fi', 'Android OC', 'Full HD', '55" OLED телевізор', 'DVB-T2 ефірне мовлення', 'IPS-матриця'].map(category => (
+          {categories.map((category: string) => (
             <Checkbox
               key={category}
-              isChecked={categories.includes(category)}
+              isChecked={selectedCategories.includes(category)}
               onChange={() => handleCategoryChange(category)}
               colorScheme="teal"
             >

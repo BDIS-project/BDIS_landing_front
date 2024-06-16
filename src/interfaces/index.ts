@@ -9,3 +9,12 @@ export interface Product {
 }
 
 export type ProductList = Product[];
+
+export interface QueryParams {
+    search?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    categories?: string;
+    inStock?: string;
+    sort?: string;
+  }
