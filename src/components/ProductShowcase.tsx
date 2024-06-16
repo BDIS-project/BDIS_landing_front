@@ -16,7 +16,7 @@ interface ProductProps {
 export default function ProductShowcase({products, loading}: ProductProps) {
 
   return (
-    <Box py={10} maxW="1200px" mx="auto" px={6}>
+    <Box maxW="1200px" mx="auto">
       <Grid templateColumns="repeat(auto-fit, minmax(240px, 1fr))" gap={6}>
       {loading
           ? Array.from({ length: 8 }, (_, index) => <SkeletonCard key={index} />)

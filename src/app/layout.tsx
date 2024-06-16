@@ -2,6 +2,7 @@ import './globals.css'
 import { Montserrat } from 'next/font/google'
 import { Providers } from './providers'
 import React, { ReactNode } from 'react';
+import FilterBlock from '@components/FilterBlock';
 
 const montserrat = Montserrat({ subsets: ['latin'] })
 
