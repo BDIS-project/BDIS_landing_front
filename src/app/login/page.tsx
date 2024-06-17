@@ -24,8 +24,12 @@ export default function Login() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/login/', { username, password });
+            const response = await axios.post('http://localhost:8000/api/login/', 
+                { "username": username, "password": password });
             localStorage.setItem('accessToken', response.data.access);
+            localStorage.setItem('refreshToken', response.data.refresh);
+            localStorage.setItem('username', response.data.user.username);
+            localStorage.setItem('role', response.data.user.role);
             router.push('/');  // Redirect to the dashboard or desired page
         } catch (error) {
             setError('Invalid credentials');

@@ -1,14 +1,18 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from 'axios';
+import { getAccessToken } from '@/lib/tokenUtils';
 
 export async function fetchCategories(): Promise<{ categoryList: string[]; status: number }> {
     try {
         console.log('Fetching categories...');
-        const token = localStorage.getItem('token');
+        const token = await getAccessToken();
 
-        // Setting up headers with Authorization token
+        if (!token) {
+            throw new Error('Unable to retrieve access token');
+        }
+
         const headers = {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         };
 
         const response: AxiosResponse<string[]> = await axios.get(
