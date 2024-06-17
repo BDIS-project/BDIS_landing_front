@@ -3,7 +3,19 @@ import axios, { AxiosResponse } from "axios";
 export async function fetchCategories(): Promise<{ categoryList: string[]; status: number }> {
     try {
         console.log('Fetching categories...');
-        const response: AxiosResponse<string[]> = await axios.get('http://localhost:8000/api/categories');
+        const token = localStorage.getItem('token');
+
+        // Setting up headers with Authorization token
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
+        const response: AxiosResponse<string[]> = await axios.get(
+            'http://localhost:8000/api/categories',
+            { headers }
+        );
+
         console.log('Fetched categories:', response.data);
         return { categoryList: response.data, status: response.status };
     } catch (error) {

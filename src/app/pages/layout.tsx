@@ -9,6 +9,7 @@ import {
 // Layout components
 import Footer from '@components/Footer';
 import Header from "@components/Header"
+import AuthGuard from '@/components/AuthGuard';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
 interface DashboardLayoutProps extends PropsWithChildren {
@@ -27,11 +28,13 @@ export default function AdminLayout(props: DashboardLayoutProps) {
 
   return (
     <Box bg="gray.800">
-      <Header />
-      <Box as="main" flex="1">
-        {children}
-      </Box>
-      <Footer />
+      <AuthGuard>
+        <Header />
+        <Box as="main" flex="1">
+              {children}
+        </Box>
+        <Footer />
+      </AuthGuard>
     </Box>
   );
 }
