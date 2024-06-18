@@ -6,17 +6,16 @@ export async function fetchProducts(queryString: string): Promise<{ productList:
     try {
         console.log('Fetching products...');
         const token = await getAccessToken();
-
+        //const token = localStorage.getItem('accessToken');
         if (!token) {
             throw new Error('Unable to retrieve access token');
         }
 
         const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         };
 
-        const url = 'http://localhost:8000/api/products' + queryString;
+        const url = 'http://localhost:8000/api/store-products/' + queryString;
         const response: AxiosResponse<Product[]> = await axios.get(url, { headers });
 
         console.log('Fetched products:', response.data);

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Box, Flex, useMediaQuery } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from "react";
 
 import ProductShowcase from '@components/ProductShowcase';
@@ -12,7 +12,6 @@ import { fetchCategories } from "@/lib/fetchCategories";
 import { ProductList } from "@/interfaces";
 
 export default function Home() {
-
   const [products, setProducts] = useState<ProductList>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,10 +26,8 @@ export default function Home() {
           fetchCategories()
         ]);
 
-        if (productResponse.status === 200) {
-          setProducts(productResponse.productList);
-          setCategories(categoryResponse.categoryList);
-        }
+        setProducts(productResponse.productList);
+        setCategories(categoryResponse.categoryList);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -51,7 +48,6 @@ export default function Home() {
         <Box flex="4" maxW="1250" mr={6}>
           <ProductShowcase products={products} loading={loading} />
         </Box>
-
       </Flex>
     </Box>
   );

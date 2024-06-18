@@ -5,18 +5,17 @@ export async function fetchCategories(): Promise<{ categoryList: string[]; statu
     try {
         console.log('Fetching categories...');
         const token = await getAccessToken();
-
+        //const token = localStorage.getItem('accessToken');
         if (!token) {
             throw new Error('Unable to retrieve access token');
         }
 
         const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         };
 
         const response: AxiosResponse<string[]> = await axios.get(
-            'http://localhost:8000/api/categories',
+            'http://localhost:8000/api/categories/',
             { headers }
         );
 
