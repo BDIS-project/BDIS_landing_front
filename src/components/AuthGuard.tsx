@@ -16,7 +16,7 @@ export default function AuthGuard({ children }: { children: ReactNode } ) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setLoading(false);
         }
-    }, [router]);
+    }, []);
 
     if (loading) {
         return <div>Loading...</div>;

@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { Box, Grid, Image, Text, Button, Badge, Flex } from '@chakra-ui/react';
-import { StarIcon } from '@chakra-ui/icons';
 import { ProductList } from '@/interfaces';
 import Card from '@components/Card';
 import SkeletonCard from '@components/SkeletonCard';

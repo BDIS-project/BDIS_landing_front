@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { 
   Box, 
@@ -6,13 +6,6 @@ import {
   Text, 
   Button, 
   Icon, 
-  Popover, 
-  PopoverTrigger, 
-  PopoverContent, 
-  PopoverArrow, 
-  PopoverCloseButton, 
-  PopoverHeader, 
-  PopoverBody  
 } from '@chakra-ui/react';
 
 import { MdFaceUnlock, MdShoppingCart } from 'react-icons/md'
@@ -22,12 +15,10 @@ import Link from 'next/link';
 import React from 'react';
 
 export default function Header() {
-  const [isProfileHovered, setIsProfileHovered] = useState(false);
   const [isCartHovered, setIsCartHovered] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
-  const initialFocusRef = React.useRef()
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');

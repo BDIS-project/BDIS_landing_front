@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -6,10 +7,6 @@ import {
   Flex,
   Heading,
   Input,
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
   Stack,
   Text,
   Select,
