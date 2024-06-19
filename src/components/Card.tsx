@@ -3,7 +3,7 @@ import { Product } from '@/interfaces';
 
 export default function Card({ product }: { product: Product }){
     return(
-    <Box bg="white" boxShadow="md" borderRadius="md" overflow="hidden" position="relative" p={2}>
+    <Box bg="white" boxShadow="md" maxW="350px" borderRadius="md" overflow="hidden" position="relative" p={2}>
         {product.promotional_product && (
         <Badge
             position="absolute"

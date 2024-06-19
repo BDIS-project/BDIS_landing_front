@@ -16,11 +16,19 @@ export default function ProductShowcase({products, loading}: ProductProps) {
 
   return (
     <Box maxW="1200px" mx="auto">
-      <Grid templateColumns="repeat(auto-fit, minmax(240px, 1fr))" gap={6}>
-      {loading
+      <Grid
+        templateColumns={{
+          base: 'repeat(auto-fit, minmax(240px, 1fr))',   // For screen widths less than 1500px
+          xl: 'repeat(4, minmax(240px, 1fr))', // For screen widths 1500px and above
+        }}
+        gap={6}
+        justifyContent="start" // Align items to the left
+      >
+        {loading
           ? Array.from({ length: 8 }, (_, index) => <SkeletonCard key={index} />)
-          : products.map((product) => <Card key={product.id_product} product={product} />)
-        }
+          : products.map((product) => (
+              <Card key={product.id_product} product={product} />
+            ))}
       </Grid>
     </Box>
   );

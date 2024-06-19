@@ -13,8 +13,10 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import Link from 'next/link';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
+  const router = useRouter();
   const [isCartHovered, setIsCartHovered] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
@@ -35,9 +37,11 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
 
       if (token) {
-        await axios.post('http://localhost:8000/api/logout/', {}, {
+        await axios.post('http://localhost:8000/api/logout/', 
+          { refresh_token: refreshToken }, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -52,6 +56,7 @@ export default function Header() {
       setIsAuthenticated(false);
       setUsername(null);
       setRole(null);
+      router.push('/login');
     } catch (error) {
       console.error('Error logging out', error);
     }
