@@ -23,7 +23,7 @@ interface FilterBlockProps {
   }
 
 export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps){
-    const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -31,7 +31,6 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
   const [sort, setSort] = useState('');
 
   useEffect(() => {
-    setIsMounted(true);
 
     // Parse query params from prevQuery and set initial state
     if (prevQuery) {
@@ -47,8 +46,6 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
       setSort(params.get('sort') || '');
     }
   }, [prevQuery]);
-
-  const router = isMounted ? useRouter() : null;
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);

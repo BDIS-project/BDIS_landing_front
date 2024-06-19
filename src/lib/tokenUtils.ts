@@ -1,9 +1,9 @@
 import axios, { AxiosError } from 'axios';
-import { useRouter } from 'next/navigation';
+//import { useRouter } from 'next/navigation';
 
 export const getAccessToken = async (): Promise<string | null> => {
+    //const router = useRouter();
     let token = localStorage.getItem('accessToken');
-    console.log(token)
 
     if (!token) {
         console.error('No access token found');
@@ -20,9 +20,7 @@ export const getAccessToken = async (): Promise<string | null> => {
         if (error.response && error.response.status === 401) {
             // Token has expired, attempt to refresh it
             console.log('Access token expired, attempting to refresh');
-            console.log(error)
             token = await refreshToken();
-            console.log(123321)
         } else {
             console.error('Error verifying token', error);
             return null;
@@ -33,9 +31,6 @@ export const getAccessToken = async (): Promise<string | null> => {
 };
 
 const refreshToken = async (): Promise<string | null> => {
-    console.log(234)
-    //const router = useRouter();
-    console.log(345)
     try {
         const refreshToken = localStorage.getItem('refreshToken');
         console.log(refreshToken)

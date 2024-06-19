@@ -19,7 +19,7 @@ import { MdFaceUnlock, MdShoppingCart } from 'react-icons/md'
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 
 export default function Header() {
   const [isProfileHovered, setIsProfileHovered] = useState(false);
@@ -27,6 +27,7 @@ export default function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const initialFocusRef = React.useRef()
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -66,76 +67,61 @@ export default function Header() {
   };
 
   return (
-    <Box bg="white" boxShadow="sm" py={4}>
-      <Flex justify="space-between" align="center" maxW="1200px" mx="auto" px={6}>
-        <Text fontSize="xl" fontWeight="bold" color="teal">
-          Zlagoda
-        </Text>
-        <Flex>
-          <Link href="/pages/about">
-            <Button variant="link" color="black">
-              About us
+    <Box>
+      <Box bg="white" boxShadow="sm" py={4}>
+        <Flex justify="space-between" align="center" maxW="1200px" mx="auto" px={6}>
+          <Text fontSize="xl" fontWeight="bold" color="teal">
+            Zlagoda
+          </Text>
+          <Flex>
+            <Link href="/pages/about">
+              <Button variant="link" color="black">
+                About us
+              </Button>
+            </Link>
+            <Link href="/pages/home">
+              <Button variant="link" mx={12} color="black" fontSize="xl">
+                STORE
+              </Button>
+            </Link>
+            <Link href="/pages/info">
+              <Button variant="link" color="black">
+                Shipping 
+              </Button>
+            </Link>
+          </Flex>
+          <Flex alignItems="center">
+            {isAuthenticated ? (
+            <Button colorScheme="teal" mx={4} onClick={handleLogout}>
+              Logout
             </Button>
-          </Link>
-          <Link href="/pages/home">
-            <Button variant="link" mx={12} color="black" fontSize="xl">
-              STORE
-            </Button>
-          </Link>
-          <Link href="/pages/info">
-            <Button variant="link" color="black">
-              Shipping 
-            </Button>
-          </Link>
-        </Flex>
-        <Flex alignItems="center">
-          <Popover>
-            <PopoverTrigger>
+          ) : (
+            <Link href="/login" passHref>
+              <Button colorScheme="teal" mx={4}>
+                Login
+              </Button>
+            </Link>
+          )}
+            <Link href="/pages/cart" passHref>
               <Icon
-                as={MdFaceUnlock}
+                as={MdShoppingCart}
                 boxSize={8}
-                color={isProfileHovered ? 'teal.400' : 'teal'}
-                mr={6}
+                color={isCartHovered ? 'teal.400' : 'teal'}
                 mt={2}
-                onMouseEnter={() => setIsProfileHovered(true)}
-                onMouseLeave={() => setIsProfileHovered(false)}
-                cursor="pointer"
+                onMouseEnter={() => setIsCartHovered(true)}
+                onMouseLeave={() => setIsCartHovered(false)}
               />
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow />
-              <PopoverCloseButton />
-              <PopoverHeader>
-                {isAuthenticated ? `Hi, ${username}!` : 'Welcome!'}
-              </PopoverHeader>
-              <PopoverBody>
-                {isAuthenticated ? (
-                  <>
-                    <Text>{`Role: ${role}`}</Text>
-                    <Button colorScheme="teal" mt={2} onClick={handleLogout}>
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <Link href="/login" passHref>
-                    <Button colorScheme="teal">Login</Button>
-                  </Link>
-                )}
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
-          <Link href="/pages/cart" passHref>
-            <Icon
-              as={MdShoppingCart}
-              boxSize={8}
-              color={isCartHovered ? 'teal.400' : 'teal'}
-              mt={2}
-              onMouseEnter={() => setIsCartHovered(true)}
-              onMouseLeave={() => setIsCartHovered(false)}
-            />
-          </Link>
+            </Link>
+          </Flex>
         </Flex>
-      </Flex>
+      </Box>
+      <Box bg="teal">
+        <Flex alignItems="center" py={3} justify="space-between" align="center" maxW="1200px" mx="auto">
+          <Text color="white" fontSize="x" fontWeight="semibold">
+            {isAuthenticated ? `Hi, ${role} ${username}!` : 'Welcome!'}
+          </Text>
+        </Flex>
+      </Box>
     </Box>
   );
 }
