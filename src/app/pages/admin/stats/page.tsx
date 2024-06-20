@@ -1,38 +1,54 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { Box, Heading, Text, Divider, Flex, Select } from '@chakra-ui/react';
+import { Box, Heading, Text, Input, Flex, Select } from '@chakra-ui/react';
+
 import { fetchCategoriesSummary } from "@/lib/fetchStats/fetchCategoriesSummary";
 import { fetchSoldEveryProduct } from "@/lib/fetchStats/fetchSoldEveryProduct";
+
 import { fetchCategoryAveragePrice } from "@/lib/fetchStats/fetchCategoryAveragePrice";
 import { fetchAllProductsAreSold } from "@/lib/fetchStats/fetchAllProductsAreSold";
 
-export default function EvelinaQueries() {
+import { fetchAllCategories } from "@/lib/fetchStats/fetchAllCategories";
+import { fetchCategoryProductInfo } from "@/lib/fetchStats/fetchCategoryProductInfo";
+
+export default function StatsQueries() {
     const [metric, setMetric] = useState<'revenue' | 'quantity'>('revenue'); // Default metric is 'revenue'
     const [categoriesSummary, setCategoriesSummary] = useState<any[]>([]);
     const [soldProducts, setSoldProducts] = useState<any[]>([]);
 
+    const [includePromotional, setIncludePromotional] = useState<boolean>(true);// Default Promotional is 'true'
     const [categoryAveragePrice, setCategoryAveragePrice] = useState<any[]>([]);
     const [allProductsSold, setAllProductsSold] = useState<any[]>([]);
-    const [includePromotional, setIncludePromotional] = useState<boolean>(true);// Default Promotional is 'true'
+
+    const [lowerEndQuantity, setlowerEndQuantity] = useState<number>(0);// Default Promotional is 'true'
+    const [categoryProductInfo, setCategoryProductInfo] = useState<any[]>([]);
+    const [allCategories, setAllCategories] = useState<any[]>([]);
 
   // useEffect to load data once when component mounts
   useEffect(() => {
-      const fetchSold = async () => {
+    const fetchSold = async () => {
           const soldProductsData = await fetchSoldEveryProduct();
           if (soldProductsData) {
               setSoldProducts(soldProductsData);
           }
-      };
-      const fetchAllSold = async () => {
+    };
+    const fetchAllSold = async () => {
         const allProductsSoldData = await fetchAllProductsAreSold();
         if (allProductsSoldData) {
             setAllProductsSold(allProductsSoldData);
         }
     };
+    const fetchAllCategoriesData = async () => {
+        const allCategoriesData = await fetchAllCategories();
+        if (allCategoriesData) {
+            setAllCategories(allCategoriesData);
+        }
+    };
 
       fetchSold();
       fetchAllSold();
+      fetchAllCategoriesData();
   }, []); 
 
   useEffect(() => {
@@ -55,7 +71,18 @@ useEffect(() => {
     };
 
     fetchAveragePrice ();
-}, [includePromotional]); // Runs whenever metric changes
+}, [includePromotional]); // Runs whenever Promotional changes
+
+useEffect(() => {
+    const fetchCategoryInfo  = async () => {
+        const categoryInfoData = await fetchCategoryProductInfo(lowerEndQuantity);  // Fetch based on entered lowerEndQuantity
+        if (categoryInfoData) {
+            setCategoryProductInfo(categoryInfoData);
+        }
+    };
+
+    fetchCategoryInfo();
+}, [lowerEndQuantity]); // Runs whenever lowerEndQuantity changes
 
   const handleMetricChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMetric(event.target.value as 'revenue' | 'quantity');
@@ -63,6 +90,9 @@ useEffect(() => {
 
   const handlePromotionalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setIncludePromotional(event.target.value === 'true');
+};
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setlowerEndQuantity(Number(event.target.value));
 };
 
     return (
@@ -109,6 +139,7 @@ useEffect(() => {
                     </Flex>
                 </Box>
             </Box>
+
             <Box bg="white" py={10} maxW="1000px" mx="auto" px="100px" mb="50px" borderRadius="15px">
 
                 <Flex justifyContent="center" mb={4}>
@@ -141,6 +172,44 @@ useEffect(() => {
                     </Heading>
                     <Flex flexDirection="column">
                         {allProductsSold.map((category) => (
+                            <Flex key={category.category_name} justifyContent="space-between" mb={2}>
+                                <Text fontWeight="medium">{category.category_name}</Text>
+                            </Flex>
+                        ))}
+                    </Flex>
+                </Box>
+            </Box>
+
+            <Box bg="white" py={10} maxW="1000px" mx="auto" px="100px" mb="50px" borderRadius="15px">
+
+                <Flex justifyContent="center" mb={4}>
+                    <Text fontWeight="medium">Enter Lower End Quantity:</Text>
+                    <Input type="number" value={lowerEndQuantity} onChange={handleQuantityChange} />
+                </Flex>
+
+                <Box>
+                    <Heading as="h2" fontSize="xl" mb={4}>
+                        Category Product Info:
+                    </Heading>
+                    <Flex flexDirection="column">
+                    {categoryProductInfo.map((info) => (
+                        <Flex key={info.category_number} justifyContent="space-between" mb={2}>
+                            <Text fontWeight="medium">{info.category_name}</Text>
+                            <Text fontWeight="medium">Count:    {info.count}</Text>
+                        </Flex>
+                    ))}
+                </Flex>
+                </Box>
+            </Box> 
+
+
+            <Box bg="white" py={10} maxW="1000px" mx="auto" px="100px" mb="100px" borderRadius="15px">
+                <Box>
+                    <Heading as="h2" fontSize="xl" mb={4}>
+                        All Categories:
+                    </Heading>
+                    <Flex flexDirection="column">
+                    {allProductsSold.map((category) => (
                             <Flex key={category.category_name} justifyContent="space-between" mb={2}>
                                 <Text fontWeight="medium">{category.category_name}</Text>
                             </Flex>
