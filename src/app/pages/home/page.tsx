@@ -9,11 +9,11 @@ import FilterBlock from '@components/FilterBlock';
 
 import { fetchProducts } from "@/lib/fetchProducts";
 import { fetchCategories } from "@/lib/fetchCategories";
-import { ProductList } from "@/interfaces";
+import { ProductList, CategoryList } from "@/interfaces";
 
 export default function Home() {
   const [products, setProducts] = useState<ProductList>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<CategoryList>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {

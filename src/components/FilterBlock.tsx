@@ -13,9 +13,10 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { ParsedUrlQueryInput } from 'querystring';
+import { CategoryList } from "@/interfaces";
 
 interface FilterBlockProps {
-    categories: string[];
+    categories: CategoryList;
     prevQuery?: string;
   }
 
@@ -23,7 +24,7 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [priceRange, setPriceRange] = useState([0, 10000]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [inStock, setInStock] = useState(true);
   const [sort, setSort] = useState('');
 
@@ -38,7 +39,9 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
         Number(params.get('minPrice')) || 0,
         Number(params.get('maxPrice')) || 10000,
       ]);
-      setSelectedCategories((params.get('categories') || '').split(',').filter(Boolean));
+      setSelectedCategories(
+        (params.get('categories') || '').split(',').filter(Boolean).map(Number)
+      );
       setInStock(params.get('inStock') === 'true');
       setSort(params.get('sort') || '');
     }
@@ -52,11 +55,11 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
     setPriceRange(value);
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategories((prevCategories: string[]) =>
-      prevCategories.includes(category)
-        ? prevCategories.filter((cat: string) => cat !== category)
-        : [...prevCategories, category]
+  const handleCategoryChange = (categoryNumber: number) => {
+    setSelectedCategories((prevCategories) =>
+      prevCategories.includes(categoryNumber)
+        ? prevCategories.filter((cat) => cat !== categoryNumber)
+        : [...prevCategories, categoryNumber]
     );
   };
 
@@ -136,14 +139,14 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
       <Box mb={4}>
         <Text mb={2}>Categories:</Text>
         <Stack spacing={1}>
-          {categories.map((category: string) => (
+          {categories.map((category) => (
             <Checkbox
-              key={category}
-              isChecked={selectedCategories.includes(category)}
-              onChange={() => handleCategoryChange(category)}
+              key={category.category_number}
+              isChecked={selectedCategories.includes(category.category_number)}
+              onChange={() => handleCategoryChange(category.category_number)}
               colorScheme="teal"
             >
-              {category}
+              {category.category_name}
             </Checkbox>
           ))}
         </Stack>
@@ -159,10 +162,11 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
         <Text mb={2}>Sort by:</Text>
         <Select value={sort} onChange={handleSortChange} bg="white" borderColor="gray.300">
           <option value="">No sorting</option>
-          <option value="price-asc">Price [asc]</option>
-          <option value="price-desc">Price [desc]</option>
-          <option value="popularity">Popularity</option>
-          <option value="rating">Rating</option>
+          <option value="products-asc">Ascending names</option>
+          <option value="products-desc">Descending names</option>
+          <option value="price-asc">Ascending price</option>
+          <option value="price-desc">Descending price</option>
+          <option value="numbers-desc">Descending amount</option>
         </Select>
       </Box>
 

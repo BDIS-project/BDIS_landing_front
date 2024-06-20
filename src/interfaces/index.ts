@@ -15,6 +15,13 @@ export interface Product {
 
 export type ProductList = Product[];
 
+export interface Category {
+    category_number: number;
+    category_name: string;
+}
+
+export type CategoryList = Category[];
+
 export interface QueryParams {
     search?: string;
     minPrice?: string;
@@ -23,3 +30,4 @@ export interface QueryParams {
     inStock?: string;
     sort?: string;
   }
+

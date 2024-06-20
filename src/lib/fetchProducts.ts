@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Product, ProductList } from '@/interfaces';
+import { ProductList } from '@/interfaces';
 import { getAccessToken } from '@/lib/tokenUtils';
 
 export async function fetchProducts(queryString: string): Promise<{ productList: ProductList; status: number }> {
@@ -16,7 +16,7 @@ export async function fetchProducts(queryString: string): Promise<{ productList:
         };
 
         const url = 'http://localhost:8000/api/store-products/' + queryString;
-        const response: AxiosResponse<Product[]> = await axios.get(url, { headers });
+        const response: AxiosResponse<ProductList> = await axios.get(url, { headers });
 
         console.log('Fetched products:', response.data);
         return { productList: response.data, status: response.status };
