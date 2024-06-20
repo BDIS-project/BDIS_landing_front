@@ -12,7 +12,7 @@ import AuthGuard from '@/components/AuthGuard';
 export default function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
-    <Box bg="gray.800">
+    <Box bg="gray.800" minH="2000px">
       <AuthGuard>
         <Header />
         <Box as="main" flex="1">

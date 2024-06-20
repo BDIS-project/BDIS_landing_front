@@ -1,7 +1,14 @@
 import { Box, Text, Button, Badge, Flex, Image } from '@chakra-ui/react';
 import { Product } from '@/interfaces';
+import { useState } from 'react';
 
 export default function Card({ product }: { product: Product }){
+    const [imageSrc, setImageSrc] = useState(product.picture ? `/images/${product.picture}.jpg` : '/images/box.jpg');
+
+    const handleImageError = () => {
+        setImageSrc('/images/box.jpg');
+    };
+
     return(
     <Box bg="white" boxShadow="md" maxW="350px" borderRadius="md" overflow="hidden" position="relative" p={2}>
         {product.promotional_product && (
@@ -18,10 +25,11 @@ export default function Card({ product }: { product: Product }){
         </Badge>
         )}
         <Image
-              src="/images/box.jpg" //{product.image}
+              src={imageSrc}
               alt={product.product_name}
               borderRadius="md"
               p={4}
+              onError={handleImageError}
             />
         <Box p={4}>
         <Text fontWeight="bold" fontSize="xl" mb={1} color="black">
@@ -31,7 +39,7 @@ export default function Card({ product }: { product: Product }){
         {/* {product.cathegory} */}
         Category
         </Text>
-        <Flex justifyContent="space-between" alignItems="center" mb={4}>
+        <Flex justifyContent="space-between" alignItems="center" mb={10}>
                 {product.promotional_product 
                 ? (
                     <Flex>
@@ -52,8 +60,8 @@ export default function Card({ product }: { product: Product }){
             {product.products_number} left
             </Text>
         </Flex>
-        <Button colorScheme="teal" size="sm">
-            Add to Cart
+        <Button position="absolute" bottom={4} left={4} colorScheme="teal" size="sm">
+            Add to Check
         </Button>
         </Box>
     </Box>

@@ -43,7 +43,7 @@ export default function Home() {
     };
     console.log('i fire once');
     fetchData();
-  }, []);
+  }, [categories.length, products.length]);
 
   return (
     <Box>

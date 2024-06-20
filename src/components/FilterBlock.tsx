@@ -89,7 +89,7 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
         }
       });
 
-      const searchParams = new URLSearchParams(query as ParsedUrlQueryInput).toString();
+      const searchParams = new URLSearchParams(query as Record<string, string>).toString();
       window.location.href = `/pages/home?${searchParams}`;
       //router.replace(`/pages/home?${searchParams}`);
     }

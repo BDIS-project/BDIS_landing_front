@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner, Center } from '@chakra-ui/react';
 import React, { useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -16,10 +17,20 @@ export default function AuthGuard({ children }: { children: ReactNode } ) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setLoading(false);
         }
-    }, []);
+    }, [router]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <Center height="100vh">
+                <Spinner
+                    thickness="10px"
+                    speed="1s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="xl"
+                />
+            </Center>
+        );
     }
 
     return <>{children}</>;
