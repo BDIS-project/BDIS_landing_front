@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { ProductList } from '@/interfaces';
 import { getAccessToken } from '@/lib/tokenUtils';
 
-export async function fetchProducts(queryString: string): Promise<{ productList: ProductList; status: number }> {
+export async function fetchProducts(queryString?: string): Promise<{ productList: ProductList; status: number }> {
     try {
         console.log('Fetching products...');
         const token = await getAccessToken();
@@ -15,7 +15,7 @@ export async function fetchProducts(queryString: string): Promise<{ productList:
             'Authorization': `Bearer ${token}`
         };
 
-        const url = 'http://localhost:8000/api/store-products/' + queryString;
+        const url = `http://localhost:8000/api/store-products/${queryString ? queryString : ''}`;
         const response: AxiosResponse<ProductList> = await axios.get(url, { headers });
 
         console.log('Fetched products:', response.data);

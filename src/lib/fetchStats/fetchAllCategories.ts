@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { getAccessToken } from '@/lib/tokenUtils';
 
-export async function fetchAllCategories(): Promise<any[]> {
+export async function fetchAllCategories(): Promise<any> {
     try {
         console.log('Fetching  all categories...');
         const token = await getAccessToken();
@@ -13,7 +13,7 @@ export async function fetchAllCategories(): Promise<any[]> {
             'Authorization': `Bearer ${token}`
         };
 
-        const response: AxiosResponse<any[]> = await axios.get(
+        const response: AxiosResponse<any> = await axios.get(
             'http://localhost:8000/api/all-categories/',
             { headers }
         );

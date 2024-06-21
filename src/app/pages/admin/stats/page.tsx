@@ -11,6 +11,7 @@ import { fetchAllProductsAreSold } from "@/lib/fetchStats/fetchAllProductsAreSol
 
 import { fetchAllCategories } from "@/lib/fetchStats/fetchAllCategories";
 import { fetchCategoryProductInfo } from "@/lib/fetchStats/fetchCategoryProductInfo";
+import { Console } from 'console';
 
 export default function StatsQueries() {
     const [metric, setMetric] = useState<'revenue' | 'quantity'>('revenue'); // Default metric is 'revenue'
@@ -91,7 +92,7 @@ useEffect(() => {
   const handlePromotionalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setIncludePromotional(event.target.value === 'true');
 };
-  const handleQuantityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setlowerEndQuantity(Number(event.target.value));
 };
 
@@ -165,7 +166,7 @@ useEffect(() => {
             </Box> 
 
 
-            <Box bg="white" py={10} maxW="1000px" mx="auto" px="100px" mb="100px" borderRadius="15px">
+            <Box bg="white" py={10} maxW="1000px" mx="auto" px="100px" mb="50px" borderRadius="15px">
                 <Box>
                     <Heading as="h2" fontSize="xl" mb={8}>
                         Categories where all products are being sold:
@@ -209,7 +210,7 @@ useEffect(() => {
                         All Categories:
                     </Heading>
                     <Flex flexDirection="column">
-                    {allProductsSold.map((category) => (
+                    {allCategories.map((category) => (
                             <Flex key={category.category_name} justifyContent="space-between" mb={2}>
                                 <Text fontWeight="medium">{category.category_name}</Text>
                             </Flex>

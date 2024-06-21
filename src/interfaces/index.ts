@@ -4,11 +4,10 @@ export interface Product {
     id_product: number;
     product_name: string;
     category_name: string;
-    //image: string;
+    picture?: string;
     selling_price: number;  
     original_price?: number;
     products_number: number;
-    //rating: number;
     promotional_product: boolean;
     expire_date: string;
 }
@@ -29,5 +28,10 @@ export interface QueryParams {
     categories?: string;
     inStock?: string;
     sort?: string;
-  }
+}
+
+export interface CartItem {
+  productId: number;
+  quantity: number;
+}
 
