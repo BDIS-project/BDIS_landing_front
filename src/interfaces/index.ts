@@ -30,9 +30,10 @@ export interface QueryParams {
     sort?: string;
 }
 
+
 export interface CartItem {
-  productId: number;
-  quantity: number;
+  upc: string;
+  amount: number;
 }
 
 
@@ -46,7 +47,12 @@ export interface CustomerCard {
     street?: string,
     zip_code?: string,
     percent: number
-  }
+}
 
-  export type CustomerCardList = CustomerCard[];
+export type CustomerCardList = CustomerCard[];
 
+
+export interface CreateCheckData {
+    client: string;
+    sold_products: CartItem[];
+}

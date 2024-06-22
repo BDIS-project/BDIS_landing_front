@@ -22,18 +22,15 @@ export default function Home() {
         const queryString = window.location.search;
         
         // Fetch products if not already fetched
-        if (products.length === 0) {
-          const productResponse = await fetchProducts(queryString);
-          setProducts(productResponse.productList);
-          console.log("Products fetched")
-        }
+        const productResponse = await fetchProducts(queryString);
+        setProducts(productResponse.productList);
+        console.log("Products fetched")
 
-        // Fetch categories if not already fetched
-        if (categories.length === 0) {
-          const categoryResponse = await fetchCategories();
-          setCategories(categoryResponse.categoryList);
-          console.log("Categories fetched")
-        }
+        // Fetch categories 
+        const categoryResponse = await fetchCategories();
+        setCategories(categoryResponse.categoryList);
+        console.log("Categories fetched")
+
 
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -9,7 +9,7 @@ import { CartItem } from '@/interfaces';
 export default function Card({ product }: { product: Product }){
     const [imageSrc, setImageSrc] = useState(product.picture ? `/images/${product.picture}.jpg` : '/images/box.jpg');
     const [isAddingToCart, setIsAddingToCart] = useState(false);
-    const [quantity, setQuantity] = useState(1);
+    const [amount, setAmount] = useState(1);
     const [role, setRole] = useState<string | null>(null);
 
     useEffect(() => {
@@ -19,11 +19,11 @@ export default function Card({ product }: { product: Product }){
       }
 
       const storedCartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
-      const storedCartItem = storedCartItems.find((item: { productId: string }) => item.productId === product.upc.toString());
+      const storedCartItem = storedCartItems.find((item: { upc: string }) => item.upc === product.upc.toString());
   
       if (storedCartItem) {
         setIsAddingToCart(true);
-        setQuantity(storedCartItem.quantity);
+        setAmount(storedCartItem.amount);
       }
     }, []);
 
@@ -44,26 +44,26 @@ export default function Card({ product }: { product: Product }){
         window.location.href = `/admin/system/storeproducts/delete/${product.upc}`;
     };
 
-    const handleQuantityChange = (newQuantity: number) => {
-        setQuantity(newQuantity);
-        if (newQuantity > 0) {
-          updateCart(newQuantity);
+    const handleAmountChange = (newAmount: number) => {
+        setAmount(newAmount);
+        if (newAmount > 0) {
+          updateCart(newAmount);
         } else {
           removeFromCart();
         }
       };
 
-      const addToCart = (quantity: number) => {
+      const addToCart = (amount: number) => {
         const cartItem: CartItem = {
-          productId: product.upc,
-          quantity: quantity,
+          upc: String(product.upc),
+          amount: amount,
         };
 
         let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
-        const existingItemIndex = cartItems.findIndex((item: { productId: number }) => item.productId === product.upc);
+        const existingItemIndex = cartItems.findIndex((item: { upc: string }) => item.upc === String(product.upc));
     
         if (existingItemIndex >= 0) {
-          cartItems[existingItemIndex].quantity += quantity;
+          cartItems[existingItemIndex].amount += amount;
         } else {
           cartItems.push(cartItem);
         }
@@ -71,22 +71,22 @@ export default function Card({ product }: { product: Product }){
         sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
       };
     
-      const updateCart = (quantity: number) => {
+      const updateCart = (amount: number) => {
         let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
-        const itemIndex = cartItems.findIndex((item: { productId: number }) => item.productId === product.upc);
+        const itemIndex = cartItems.findIndex((item: { upc: string }) => item.upc === String(product.upc));
     
         if (itemIndex >= 0) {
-          cartItems[itemIndex].quantity = quantity;
+          cartItems[itemIndex].amount = amount;
           sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
         }
       };
     
       const removeFromCart = () => {
         let cartItems = JSON.parse(sessionStorage.getItem('cartItems') || '[]');
-        cartItems = cartItems.filter((item: { productId: number }) => item.productId !== product.upc);
+        cartItems = cartItems.filter((item: { upc: string }) => item.upc !== String(product.upc));
         sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
         setIsAddingToCart(false);
-        setQuantity(1);
+        setAmount(1);
       };
 
       return (
@@ -178,24 +178,24 @@ export default function Card({ product }: { product: Product }){
                 <Input
                   type="number"
                   min={1}
-                  value={quantity}
-                  onChange={(e) => handleQuantityChange(parseInt(e.target.value))}
+                  value={amount}
+                  onChange={(e) => handleAmountChange(parseInt(e.target.value))}
                   mr={2}
                   max={product.products_number}
                 />
                 <IconButton
-                  aria-label="Increase quantity"
+                  aria-label="Increase amount"
                   icon={<AddIcon />}
-                  onClick={() => handleQuantityChange(quantity + 1)}
+                  onClick={() => handleAmountChange(amount + 1)}
                   mr={2}
-                  isDisabled={quantity >= product.products_number}
+                  isDisabled={amount >= product.products_number}
                 />
                 <IconButton
-                  aria-label="Decrease quantity"
+                  aria-label="Decrease amount"
                   icon={<MinusIcon />}
-                  onClick={() => handleQuantityChange(quantity - 1)}
+                  onClick={() => handleAmountChange(amount - 1)}
                   mr={2}
-                  isDisabled={quantity <= 0}
+                  isDisabled={amount <= 0}
                 />
               </Flex>
             )}
