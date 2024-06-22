@@ -4,20 +4,21 @@ import React from 'react';
 import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 
-interface TableCardProps {
-    tableName: string;
+interface ObjectCardProps {
+    objectName: string;
     tableRoute: string;
+    objectRoute: string;
 }
 
-export default function TableCard({ tableName, tableRoute }: TableCardProps) {
+export default function TableCard({ objectName, tableRoute, objectRoute }: ObjectCardProps) {
     const router = useRouter();
 
-    const handleAddClick = () => {
-        router.push(`/pages/admin/system/${tableRoute}/create`);
+    const handleUpdateClick = () => {
+        router.push(`/pages/admin/system/${tableRoute}/update/${objectRoute}`);
     };
 
-    const handleMoreClick = () => {
-        router.push(`/pages/admin/system/${tableRoute}`);
+    const handleDeleteClick = () => {
+        router.push(`/pages/admin/system/${tableRoute}/delete/${objectRoute}`);
     };
 
     return (
@@ -32,14 +33,14 @@ export default function TableCard({ tableName, tableRoute }: TableCardProps) {
         >
             <Flex justify="space-between" align="center">
                 <Text fontSize="xl" fontWeight="bold" mt={1} mr={4}>
-                    {tableName}
+                    {objectName}
                 </Text>
                 <Box>
-                    <Button colorScheme="teal" onClick={handleAddClick} mr={4}>
-                        +
+                    <Button colorScheme="gray" onClick={handleUpdateClick} mr={4}>
+                        Update
                     </Button>
-                    <Button colorScheme="blue" onClick={handleMoreClick} mr={4}>
-                        More
+                    <Button colorScheme="red" onClick={handleDeleteClick} mr={4}>
+                        Delete
                     </Button>
                 </Box>
             </Flex>
