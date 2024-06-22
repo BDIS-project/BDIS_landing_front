@@ -7,6 +7,7 @@ import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { CartItem } from '@/interfaces';
 
 export default function Card({ product }: { product: Product }){
+  const isOutOfStock = product.products_number === 0;
     const [imageSrc, setImageSrc] = useState(product.picture ? `/images/${product.picture}.jpg` : '/images/box.jpg');
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [amount, setAmount] = useState(1);
@@ -110,6 +111,10 @@ export default function Card({ product }: { product: Product }){
             borderRadius="md"
             p={4}
             onError={handleImageError}
+            sx={{
+              opacity: isOutOfStock ? 0.35 : 1,
+              filter: isOutOfStock ? 'grayscale(100%)' : 'none'
+            }}
           />
           <Box p={4}>
             <Text fontWeight="bold" fontSize="xl" mb={1} color="black">
