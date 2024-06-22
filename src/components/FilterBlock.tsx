@@ -120,6 +120,7 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
             maxW="100px"
             mr={2}
             bg="white"
+            textColor="teal"
             borderColor="gray.300"
           />
           <Text mr={2}>to</Text>
@@ -130,6 +131,7 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
             maxW="100px"
             mr={2}
             bg="white"
+            textColor="teal"
             borderColor="gray.300"
           />
           <Text>$</Text>

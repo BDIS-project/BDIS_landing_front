@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import { Box, Text, Flex, Button, Heading, Input, IconButton, Select } from '@chakra-ui/react';
 import { AddIcon, MinusIcon } from '@chakra-ui/icons';
 import { fetchProducts } from '@/lib/fetchProducts';
-import { ProductList, CartItem } from '@/interfaces';
+import { fetchCustomerCardOverview } from '@/lib/fetchCart/fetchCustomerCardOverview';
+import { ProductList, CartItem, CustomerCard, CustomerCardList } from '@/interfaces';
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [products, setProducts] = useState<ProductList>([]);
+  const [customerCards, setCustomerCards] = useState<CustomerCardList>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerCard | null>(null);
 
   useEffect(() => {
     // Fetch cart items from session storage
@@ -21,7 +24,16 @@ export default function CartPage() {
       setProducts(fetchedProducts.productList);
     };
 
+    // Fetch customer card overview on page load
+    const fetchCustomerCards = async () => {
+      const response = await fetchCustomerCardOverview();
+      if (response.status === 200) {
+          setCustomerCards(response.customerCardList);
+      }
+    };
+
     fetchProductDetails();
+    fetchCustomerCards();
   }, []);
 
   const getProductById = (id: number) => {
@@ -63,8 +75,24 @@ const calculateTotalPrice = () => {
   return totalPrice.toFixed(2);
 };
 
+const calculateTotalDiscountedPrice = () => {
+  if (!selectedCustomer) return calculateTotalPrice();
+  const totalPrice = Number(calculateTotalPrice());
+  const discount = selectedCustomer.percent;
+  return (totalPrice - (totalPrice * discount / 100)).toFixed(2);
+};
+
 const handleCreateCheck = () => {
   // TODO: Implement logic to create a check based on cart items
+  if (selectedCustomer) {
+    const checkData = {
+        cartItems,
+        customerCardNumber: selectedCustomer.card_number
+    };
+    console.log('Creating check with data:', checkData);
+    console.log(checkData)
+    // Add backend call 
+}
   console.log('Creating check...');
 };
 
@@ -76,10 +104,16 @@ const handleCreateCheck = () => {
         </Heading>
         <Text fontWeight="Bold">Select client account:</Text>
         <Flex mb={4} pb={10}>
-          <Select maxW="300px" bg="teal" fontWeight="medium"> {/* value={metric} onChange={handleMetricChange} */}
-              <option value="revenue">User 1 (discount 15%)</option>
-              <option value="quantity">User 2 (discount 20%)</option>
-          </Select>
+        <Select placeholder="Select customer" onChange={(e) => {
+                    const selectedCard = customerCards.find(card => card.card_number === e.target.value);
+                    setSelectedCustomer(selectedCard || null);
+                }}>
+                    {customerCards.map(card => (
+                        <option key={card.card_number} value={card.card_number}>
+                            {`${card.cust_name} ${card.cust_surname} ${card.cust_patronymic || ''} (discount ${card.percent}%)`}
+                        </option>
+                    ))}
+                </Select>
         </Flex>
         {cartItems.length === 0 ? (
           <Text>No items in cart</Text>
@@ -130,9 +164,9 @@ const handleCreateCheck = () => {
               );
             })}
             <Flex justifyContent="space-between" mt={8} alignItems="center">
-              <Text fontWeight="bold">Sum total: ${calculateTotalPrice()}</Text>
+              <Text fontWeight="semibold">Sum total: ${calculateTotalPrice()}</Text>
               <Flex alignItems="center">
-                <Text fontWeight="bold" mr={4}>Price with discount: ${calculateTotalPrice()}</Text>
+                <Text fontWeight="bold" mr={4}>Price with discount: ${calculateTotalDiscountedPrice()}</Text>
                 <Button colorScheme="teal" onClick={handleCreateCheck}>Create check</Button>
               </Flex>
             </Flex>
