@@ -79,3 +79,35 @@ export interface PostCustomerCard {
     'zip-code'?: string;
     percent: number;
 }
+
+export interface Employee {
+    id_employee: string;
+    empl_surname: string;
+    empl_name: string;
+    empl_patronymic?: string;
+    empl_role: string;
+    salary: number;
+    date_of_birth: string;
+    date_of_start: string;
+    phone_number: string;
+    city: string;
+    street: string;
+    zip_code: string;
+}
+
+export type EmployeeList = Employee[];
+
+export interface PostEmployee {
+    id: string;
+    surname: string;
+    name: string;
+    patronymic?: string;
+    role: string;
+    salary: number;
+    birth: string;
+    start: string;
+    phone: string;
+    city: string;
+    street: string;
+    'zip-code': string;
+}
