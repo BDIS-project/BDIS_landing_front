@@ -48,14 +48,16 @@ export default function Header() {
           },
         });
       }
+      localStorage.clear()
+      sessionStorage.clear()
+      // localStorage.removeItem('accessToken');
+      // localStorage.removeItem('refreshToken');
+      // localStorage.removeItem('username');
+      // localStorage.removeItem('role');
+      // setIsAuthenticated(false);
+      // setUsername(null);
+      // setRole(null);
 
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      setIsAuthenticated(false);
-      setUsername(null);
-      setRole(null);
       router.push('/login');
     } catch (error) {
       console.error('Error logging out', error);
@@ -70,9 +72,14 @@ export default function Header() {
             Zlagoda
           </Text>
           <Flex>
-            <Link href="/pages/about">
+            {/* <Link href="/pages/about">
               <Button variant="link" color="black">
                 About us
+              </Button>
+            </Link> */}
+            <Link href="/pages/profile">
+              <Button variant="link" color="black">
+                Profile
               </Button>
             </Link>
             <Link href="/pages/home">
@@ -80,9 +87,14 @@ export default function Header() {
                 STORE
               </Button>
             </Link>
-            <Link href="/pages/info">
+            {/* <Link href="/pages/info">
               <Button variant="link" color="black">
                 Shipping 
+              </Button>
+            </Link> */}
+            <Link href="/pages/customer-cards">
+              <Button variant="link" color="black">
+                Clients 
               </Button>
             </Link>
           </Flex>

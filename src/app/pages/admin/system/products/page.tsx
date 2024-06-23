@@ -29,7 +29,7 @@ export default function BaseProductsPage() {
         <Box bg="gray.800">
             <Box bg="white" py={10} maxW="1200px" mx="auto" px="100" my="100px" borderRadius="15px">
                 <Flex mb="75px" align="center">
-                    <Heading as="h1">Customer Cards</Heading>
+                    <Heading as="h1">Products</Heading>
                     <Button colorScheme="teal" onClick={handleAddClick} ml={15} mt={2}>
                         Add New
                     </Button>

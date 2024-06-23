@@ -49,13 +49,16 @@ export default function AdminHeader() {
         });
       }
 
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      setIsAuthenticated(false);
-      setUsername(null);
-      setRole(null);
+      localStorage.clear()
+      sessionStorage.clear()
+      // localStorage.removeItem('accessToken');
+      // localStorage.removeItem('refreshToken');
+      // localStorage.removeItem('username');
+      // localStorage.removeItem('role');
+      // setIsAuthenticated(false);
+      // setUsername(null);
+      // setRole(null);
+      
       router.push('/login');
     } catch (error) {
       console.error('Error logging out', error);
