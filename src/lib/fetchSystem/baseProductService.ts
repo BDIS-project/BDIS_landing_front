@@ -17,7 +17,7 @@ export async function fetchBaseProduct(id: string): Promise<BaseProduct | null> 
         );
         
         console.log('Fetched base product:', response.data);
-        const baseProduct = response.data.find(card => card.id_product === id);
+        const baseProduct = response.data.find(card => String(card.id_product) === id);
         console.log(baseProduct)
         return baseProduct || null;
     } catch (error) {

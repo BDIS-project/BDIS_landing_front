@@ -38,11 +38,11 @@ export default function Card({ product }: { product: Product }){
       };
 
     const handleEditClick = () => {
-        window.location.href = `/admin/system/storeproducts/update/${product.upc}`;
+        window.location.href = `/pages/admin/system/store-products/update/${product.upc}`;
     };
 
     const handleDeleteClick = () => {
-        window.location.href = `/admin/system/storeproducts/delete/${product.upc}`;
+        window.location.href = `/pages/admin/system/store-products/delete/${product.upc}`;
     };
 
     const handleAmountChange = (newAmount: number) => {

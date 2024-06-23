@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Box, Heading, Input, Select, Button, VStack, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
+import { Box, Text, Heading, Input, Select, Button, VStack, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { updateStoreProduct, fetchStoreProduct } from '@/lib/fetchSystem/storeProductService';
 import { fetchBaseProducts } from '@/lib/fetchBaseProducts';
@@ -84,12 +84,9 @@ export default function UpdateStoreProductPage({ params }: { params: { id: strin
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
-                    <Input
-                        name="upc"
-                        value={formData.upc}
-                        onChange={handleInputChange}
-                        placeholder="upc"
-                    />
+                    <Text fontWeight="semibold">
+                        UPC: {formData.upc}
+                    </Text>
                     <Select
                         name="id_product"
                         value={formData.id_product.toString()}
