@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { getAccessToken } from '@/lib/tokenUtils';
 import { EmployeeList } from '@/interfaces';
 
-export async function fetchEmployees(): Promise<{ employeeList: EmployeeList; status: number }> {
+export async function fetchEmployees(role: string | null = null): Promise<{ employeeList: EmployeeList; status: number }> {
     try {
         console.log('Fetching employees overview...');
         const token = await getAccessToken();
@@ -14,10 +14,12 @@ export async function fetchEmployees(): Promise<{ employeeList: EmployeeList; st
             'Authorization': `Bearer ${token}`
         };
 
-        const response: AxiosResponse<EmployeeList> = await axios.get(
-            'http://localhost:8000/api/store-overview/?employee=true',
-            { headers }
-        );
+        let url = 'http://localhost:8000/api/store-overview/?employee=true';
+        if (role && role !== 'All') {
+            url += `&role=${role}`;
+        }
+
+        const response: AxiosResponse<EmployeeList> = await axios.get(url, { headers });
 
         console.log('Fetched employees overview:', response.data);
         return { employeeList: response.data, status: response.status };
@@ -26,3 +28,4 @@ export async function fetchEmployees(): Promise<{ employeeList: EmployeeList; st
         return { employeeList: [], status: 500 };
     }
 }
+
