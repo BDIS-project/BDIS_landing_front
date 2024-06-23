@@ -14,7 +14,7 @@ export async function fetchCashierTotal(cashierId: string, startDate: string, en
             { headers }
         );
         console.log('Fetched cashier total:', response.data);
-        return response.data.overall_total_sum;
+        return response.data[0].overall_total_sum;
     } catch (error) {
         console.error('Error fetching cashier total:', error);
         return null;
@@ -34,7 +34,7 @@ export async function fetchAllCashiersTotal(startDate: string, endDate: string):
             { headers }
         );
         console.log('Fetched all cashiers total:', response.data);
-        return response.data.overall_total_sum;
+        return response.data[0].overall_total_sum;
     } catch (error) {
         console.error('Error fetching all cashiers total:', error);
         return null;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Box, Heading, Text, Input, Flex, Select, Button } from '@chakra-ui/react';
+import { Employee, EmployeeList } from '@/interfaces';
 
 import { fetchCategoriesSummary } from "@/lib/fetchStats/fetchCategoriesSummary";
 import { fetchSoldEveryProduct } from "@/lib/fetchStats/fetchSoldEveryProduct";
@@ -11,6 +12,8 @@ import { fetchAllProductsAreSold } from "@/lib/fetchStats/fetchAllProductsAreSol
 
 import { fetchAllCategories } from "@/lib/fetchStats/fetchAllCategories";
 import { fetchCategoryProductInfo } from "@/lib/fetchStats/fetchCategoryProductInfo";
+
+import { fetchEmployees } from '@/lib/fetchEmployees';
 
 import { 
     fetchCashierTotal,
@@ -35,11 +38,14 @@ export default function StatsQueries() {
     const [allCategories, setAllCategories] = useState<any[]>([]);
 
     const [cashierTotal, setCashierTotal] = useState<number | null>(null);
-    const [allCashiersTotal, setAllCashiersTotal] = useState<any[]>([]);
+    const [allCashiersTotal, setAllCashiersTotal] = useState<number | null>(null);
     const [productSoldCount, setProductSoldCount] = useState<number | null>(null);
 
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
+    const [chosenCashier, setChosenCashier] = useState<string>('');
+
+    const [cashiers, setCashiers] = useState<EmployeeList>([]);
 
   // useEffect to load data once when component mounts
   useEffect(() => {
@@ -62,9 +68,19 @@ export default function StatsQueries() {
         }
     };
 
+    const fetchCashiersData = async () => {
+        const cashiersData = await fetchEmployees("Cashier");
+        if (cashiersData) {
+            setCashiers(cashiersData.employeeList);
+        }
+    };
+
+
+
       fetchSold();
       fetchAllSold();
       fetchAllCategoriesData();
+      fetchCashiersData();
   }, []); 
 
   useEffect(() => {
@@ -104,12 +120,11 @@ useEffect(() => {
     if (startDate) {
         fetchStatistics();
     }
-}, [startDate]);
+}, [startDate, endDate, chosenCashier]);
 
 const fetchStatistics = async () => {
     // Fetch cashier total
-    const cashierId = ''; // Provide the cashier ID here if needed
-    const cashierTotalResult = await fetchCashierTotal(cashierId, startDate, endDate);
+    const cashierTotalResult = await fetchCashierTotal(chosenCashier, startDate, endDate);
     setCashierTotal(cashierTotalResult);
 
     // Fetch all cashiers total
@@ -144,6 +159,11 @@ const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
 const handleReportsClick = () => {
     router.push(`/pages/admin/stats/reports/`);
+};
+
+const handleSelectCashierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setChosenCashier(value)
 };
 
 
@@ -294,11 +314,23 @@ const handleReportsClick = () => {
                 </Flex>
 
                 <Box>
+                    <Select
+                        name="category-number"
+                        value={chosenCashier}
+                        onChange={handleSelectCashierChange}
+                        placeholder="Select Cashier"
+                    >
+                        {cashiers.map((cashier: Employee) => (
+                            <option key={cashier.id_employee} value={cashier.id_employee}>
+                                {cashier.empl_surname} {cashier.empl_name}
+                            </option>
+                        ))}
+                    </Select>
                     {/* Block 1: Total amount of goods sold by a particular cashier */}
                     <Heading as="h2" fontSize="xl" mb={4}>
-                        Total Amount of Goods Sold by a Cashier
+                        Total Amount of Goods Sold by chosen Cashier
                     </Heading>
-                    <Text>{cashierTotal !== null ? `$${cashierTotal}` : 'Loading...'}</Text>
+                    <Text>{cashierTotal !== null ? `${cashierTotal}` : 'Loading...'}</Text>
                 </Box>
 
                 <Box mt={8}>
@@ -306,10 +338,13 @@ const handleReportsClick = () => {
                     <Heading as="h2" fontSize="xl" mb={4}>
                         Total Amount of Goods Sold by All Cashiers
                     </Heading>
-                    <Text>{allCashiersTotal !== null ? `$${allCashiersTotal}` : 'Loading...'}</Text>
+                    <Text>{allCashiersTotal !== null ? `${allCashiersTotal}` : 'Loading...'}</Text>
                 </Box>
 
                 <Box mt={8}>
+                    <Select>
+                        
+                    </Select>
                     {/* Block 3: Total number of units of a certain product sold */}
                     <Heading as="h2" fontSize="xl" mb={4}>
                         Total Number of Units of a Certain Product Sold
