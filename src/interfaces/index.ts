@@ -38,7 +38,7 @@ export interface CartItem {
 
 
 export interface CreateCheckData {
-    client: string;
+    client?: string;
     sold_products: CartItem[];
 }
 
@@ -149,3 +149,18 @@ export interface PostStoreProduct {
     'products-number': number;
     'expire-date': string; 
 }
+
+export interface AboutMeResponse {
+    employee: Employee[];
+    checks: CheckList;
+}
+
+export interface CheckProduct {
+    id_product: string,
+    product_name: string,
+    upc: string,
+    selling_price: number,
+    product_number: number
+}
+
+export type CheckProductList = CheckProduct[];

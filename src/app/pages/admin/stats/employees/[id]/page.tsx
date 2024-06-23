@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Heading, VStack, Flex, Button, Text, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
+import { Box, Flex, Heading, VStack, Button, Text, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
 import { CheckList, Employee } from '@/interfaces';
 import { fetchAboutMe } from '@/lib/fetchExtra/fetchCashierProfile';
 import { useRouter } from 'next/navigation';
 
-export default function EmployeesPage() {
-  const router = useRouter();
+
+export default function EmployeesPage({ params }: { params: { id: string } }) {
+    const router = useRouter();
+    const id = params.id;
     const [loading, setLoading] = useState(true);
     const [employee, setEmployee] = useState<Employee | null>(null);
     const [checks, setChecks] = useState<CheckList | null>(null);
@@ -17,7 +19,7 @@ export default function EmployeesPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { data, status } = await fetchAboutMe();
+                const { data, status } = await fetchAboutMe(id);
                 if (status !== 200) {
                     setError('Failed to fetch data');
                     return;
@@ -34,6 +36,11 @@ export default function EmployeesPage() {
         fetchData();
     }, []);
 
+    const handleMoreClick = (check_number: string) => {
+        router.push(`/pages/admin/stats/checks/${check_number}`);
+    };
+
+
     if (loading) {
         return <div>Loading...</div>; // Handle loading state
     }
@@ -48,15 +55,10 @@ export default function EmployeesPage() {
         );
     }
 
-    
-    const handleMoreClick = (check_number: string) => {
-      router.push(`/pages/admin/stats/checks/${check_number}`);
-  };
-
     return (
         <Box bg="gray.800">
             <Box bg="white" py={10} maxW="1000px" mx="auto" px={8} my="100px" borderRadius="15px">
-                <Heading as="h1" mb={4}>About Me - Cashier Profile</Heading>
+                <Heading as="h1" mb={4}>Cashier Profile:</Heading>
                 {employee && (
                     <VStack spacing={4} align="stretch" maxW="400px">
                         <Text><strong>Employee ID:</strong> {employee.id_employee}</Text>
@@ -75,19 +77,19 @@ export default function EmployeesPage() {
                 )}
                 {checks && (
                     <Box mt={8}>
-                        <Heading as="h2" mb={4}>Checks Created by Me</Heading>
+                        <Heading as="h2" mb={4}>Checks Created by Cashier:</Heading>
                         {checks.map(check => (
                             <Flex justify="space-between" align="center" bg="gray.200" p={4} mb={4} borderRadius="md">
-                            <Box key={check.check_number} >
-                                <Text><strong>Check Number:</strong> {check.check_number}</Text>
-                                <Text><strong>Print Date:</strong> {check.print_date}</Text>
-                                <Text><strong>Sum Total:</strong> {check.sum_total}</Text>
-                                <Text><strong>VAT:</strong> {check.vat}</Text>
-                            </Box>
-                            <Button colorScheme="teal" onClick={() => handleMoreClick(check.check_number)} mr={12}>
-                                More
-                            </Button>
-                        </Flex>
+                                <Box key={check.check_number} >
+                                    <Text><strong>Check Number:</strong> {check.check_number}</Text>
+                                    <Text><strong>Print Date:</strong> {check.print_date}</Text>
+                                    <Text><strong>Sum Total:</strong> {check.sum_total}</Text>
+                                    <Text><strong>VAT:</strong> {check.vat}</Text>
+                                </Box>
+                                <Button colorScheme="teal" onClick={() => handleMoreClick(check.check_number)} mr={12}>
+                                    More
+                                </Button>
+                            </Flex>
                         ))}
                     </Box>
                 )}

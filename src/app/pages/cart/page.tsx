@@ -93,22 +93,29 @@ const handleCloseAlert = () => {
   setAlert(null);
 };
 
-const handleCreateCheck = async () => {
-  if (selectedCustomer) {
-      const checkData = {
-          client: selectedCustomer.card_number,
-          sold_products: cartItems
-      };
 
-      const response = await fetchCreateCheck(checkData);
-      if ('error' in response) {
-          console.error('Error creating check:', response.error);
-          setAlert({ type: 'error', message: response.error });
-      } else {
-          console.log('Check created successfully:', response.check_number);
-          setAlert({ type: 'success', message: `Check created successfully: ${response.check_number}` });
-          handleClearSessionStorage();
+const handleCreateCheck = async () => {
+  let checkData
+  if(selectedCustomer){
+    checkData = {
+    client: selectedCustomer.card_number,
+    sold_products: cartItems
+    }
+  } else{
+    checkData = {
+      client: undefined,
+      sold_products: cartItems
       }
+  }
+
+  const response = await fetchCreateCheck(checkData);
+  if ('error' in response) {
+      console.error('Error creating check:', response.error);
+      setAlert({ type: 'error', message: response.error });
+  } else {
+      console.log('Check created successfully:', response.check_number);
+      setAlert({ type: 'success', message: `Check created successfully: ${response.check_number}` });
+      handleClearSessionStorage();
   }
 };
 
@@ -196,9 +203,7 @@ const handleCreateCheck = async () => {
               <Text fontWeight="semibold">Sum total: ${calculateTotalPrice()}</Text>
               <Flex alignItems="center">
                 <Text fontWeight="bold" mr={4}>Price with discount: ${calculateTotalDiscountedPrice()}</Text>
-                {selectedCustomer &&
-                  <Button colorScheme="teal" onClick={handleCreateCheck}>Create check</Button>
-                }
+                <Button colorScheme="teal" onClick={handleCreateCheck}>Create check</Button>
               </Flex>
             </Flex>
           </>
