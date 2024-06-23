@@ -2,7 +2,7 @@
 
 import { Box, Heading, Button, Flex, Grid } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import ObjectCardNoUpd from '@components/ObjectCardNoUpd';
+import ObjectCardNoUpdMore from '@components/ObjectCardNoUpdMore';
 import { fetchChecks } from '@/lib/fetchChecks';
 import { CheckList } from '@/interfaces';
 import { useRouter } from 'next/navigation';
@@ -35,10 +35,11 @@ export default function ChecksPage() {
                 </Flex>
                 <Grid templateColumns="repeat(auto-fill, minmax(600px, 1fr))" gap={6}>
                     {checks.map((check) => (
-                        <ObjectCardNoUpd
+                        <ObjectCardNoUpdMore
                             objectName={`Check Number: ${check.check_number}`}
                             tableRoute="checks"
                             objectRoute={check.check_number.toString()}
+                            showParam={true}
                         />
                     ))}
                 </Grid>

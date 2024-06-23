@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { Box, Heading, Text, Input, Flex, Select } from '@chakra-ui/react';
+import { Box, Heading, Text, Input, Flex, Select, Button } from '@chakra-ui/react';
 
 import { fetchCategoriesSummary } from "@/lib/fetchStats/fetchCategoriesSummary";
 import { fetchSoldEveryProduct } from "@/lib/fetchStats/fetchSoldEveryProduct";
@@ -11,9 +11,11 @@ import { fetchAllProductsAreSold } from "@/lib/fetchStats/fetchAllProductsAreSol
 
 import { fetchAllCategories } from "@/lib/fetchStats/fetchAllCategories";
 import { fetchCategoryProductInfo } from "@/lib/fetchStats/fetchCategoryProductInfo";
-import { Console } from 'console';
+
+import { useRouter } from 'next/navigation';
 
 export default function StatsQueries() {
+    const router = useRouter();
     const [metric, setMetric] = useState<'revenue' | 'quantity'>('revenue'); // Default metric is 'revenue'
     const [categoriesSummary, setCategoriesSummary] = useState<any[]>([]);
     const [soldProducts, setSoldProducts] = useState<any[]>([]);
@@ -96,13 +98,24 @@ useEffect(() => {
     setlowerEndQuantity(Number(event.target.value));
 };
 
-    return (
-      <Box bg="gray.800">
+const handleReportsClick = () => {
+    router.push(`/pages/admin/stats/reports/`);
+};
 
-            <Heading as="h1" textAlign="center"textColor="white" mt="125px" mb="75px">
+
+    return (
+        <Box>
+        <Box bg="gray.800" display="flex" flexDirection="column" alignItems="center">
+
+        <Flex py={3} justify="space-between" mt="125px" mb="75px" maxW="1000px" width="100%" alignItems="center">
+            <Heading as="h1" textColor="white">
                 Statistics Page
             </Heading>
-
+            <Button colorScheme="teal" onClick={handleReportsClick} mr={4}>
+                Download Reports
+            </Button>
+        </Flex>
+        </Box>
             <Box bg="white" py={10} maxW="1000px" mx="auto" px="100" mb="50px" borderRadius="15px">
 
                 <Flex justifyContent="center" mb={4}>
@@ -219,5 +232,6 @@ useEffect(() => {
                 </Box>
             </Box>
         </Box>
+
     );
 }
