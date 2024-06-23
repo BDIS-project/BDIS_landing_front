@@ -111,3 +111,41 @@ export interface PostEmployee {
     street: string;
     'zip-code': string;
 }
+
+export interface BaseProduct {
+    id_product: string;
+    category_number: number;
+    product_name: string;
+    characteristics: string;
+    picture?: string;
+}
+
+export type BaseProductList = BaseProduct[];
+
+export interface PostBaseProduct {
+    'id-product': string;
+    'category-number': number;
+    name: string;
+    characteristics: string;
+    picture?: string;
+}
+
+export interface StoreProduct {
+    upc: string;
+    upc_prom?: string;
+    id_product: number;
+    selling_price: number;
+    products_number: number;
+    expire_date: string; 
+    promotional_product: boolean;
+}
+
+export type StoreProductList = StoreProduct[];
+
+export interface PostStoreProduct {
+    UPC: string;
+    id: number;
+    price: number;
+    'products-number': number;
+    'expire-date': string; 
+}

@@ -10,7 +10,7 @@ interface ObjectCardProps {
     objectRoute: string;
 }
 
-export default function TableCard({ objectName, tableRoute, objectRoute }: ObjectCardProps) {
+export default function ObjectCard({ objectName, tableRoute, objectRoute }: ObjectCardProps) {
     const router = useRouter();
 
     const handleUpdateClick = () => {
