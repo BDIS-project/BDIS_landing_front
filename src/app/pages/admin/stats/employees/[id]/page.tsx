@@ -1,12 +1,10 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Box, Flex, Heading, VStack, Button, Text, Alert, AlertIcon, AlertTitle, AlertDescription } from '@chakra-ui/react';
+import { Box, Flex, Heading, VStack, Button, Text, Alert, AlertIcon, AlertTitle, AlertDescription, Select } from '@chakra-ui/react';
 import { CheckList, Employee } from '@/interfaces';
 import { fetchAboutMe } from '@/lib/fetchExtra/fetchCashierProfile';
 import { useRouter } from 'next/navigation';
-
 
 export default function EmployeesPage({ params }: { params: { id: string } }) {
     const router = useRouter();
@@ -15,11 +13,12 @@ export default function EmployeesPage({ params }: { params: { id: string } }) {
     const [employee, setEmployee] = useState<Employee | null>(null);
     const [checks, setChecks] = useState<CheckList | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [period, setPeriod] = useState<string>('all'); // Default period 'all'
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { data, status } = await fetchAboutMe(id);
+                const { data, status } = await fetchAboutMe(period, id);
                 if (status !== 200) {
                     setError('Failed to fetch data');
                     return;
@@ -34,12 +33,11 @@ export default function EmployeesPage({ params }: { params: { id: string } }) {
         };
 
         fetchData();
-    }, []);
+    }, [period, id]); // Fetch data whenever ID or period changes
 
     const handleMoreClick = (check_number: string) => {
         router.push(`/pages/admin/stats/checks/${check_number}`);
     };
-
 
     if (loading) {
         return <div>Loading...</div>; // Handle loading state
@@ -77,10 +75,19 @@ export default function EmployeesPage({ params }: { params: { id: string } }) {
                 )}
                 {checks && (
                     <Box mt={8}>
-                        <Heading as="h2" mb={4}>Checks Created by Cashier:</Heading>
+                        <Flex justify="space-between" align="center" mb={4}>
+                            <Heading as="h2">Checks Created by Cashier:</Heading>
+                            <Select value={period} onChange={(e) => setPeriod(e.target.value)} w="200px">
+                                <option value="all">All</option>
+                                <option value="day">Last 24 Hours</option>
+                                <option value="week">Last Week</option>
+                                <option value="month">Last Month</option>
+                                <option value="year">Last Year</option>
+                            </Select>
+                        </Flex>
                         {checks.map(check => (
-                            <Flex justify="space-between" align="center" bg="gray.200" p={4} mb={4} borderRadius="md">
-                                <Box key={check.check_number} >
+                            <Flex key={check.check_number} justify="space-between" align="center" bg="gray.200" p={4} mb={4} borderRadius="md">
+                                <Box>
                                     <Text><strong>Check Number:</strong> {check.check_number}</Text>
                                     <Text><strong>Print Date:</strong> {check.print_date}</Text>
                                     <Text><strong>Sum Total:</strong> {check.sum_total}</Text>
@@ -96,4 +103,4 @@ export default function EmployeesPage({ params }: { params: { id: string } }) {
             </Box>
         </Box>
     );
-};
+}

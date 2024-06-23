@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { getAccessToken } from '@/lib/tokenUtils';
 import { CheckList } from '@/interfaces';
 
-export async function fetchChecks(): Promise<{ checkList: CheckList; status: number }> {
+export async function fetchChecks(period: string): Promise<{ checkList: CheckList; status: number }> {
     try {
         console.log('Fetching checks...');
         const token = await getAccessToken();
@@ -11,7 +11,7 @@ export async function fetchChecks(): Promise<{ checkList: CheckList; status: num
         };
 
         const response: AxiosResponse<CheckList> = await axios.get(
-            'http://localhost:8000/api/check-overview/',
+            `http://localhost:8000/api/check-overview/?period=${period}`,
             { headers }
         );
 

@@ -12,6 +12,12 @@ import { fetchAllProductsAreSold } from "@/lib/fetchStats/fetchAllProductsAreSol
 import { fetchAllCategories } from "@/lib/fetchStats/fetchAllCategories";
 import { fetchCategoryProductInfo } from "@/lib/fetchStats/fetchCategoryProductInfo";
 
+import { 
+    fetchCashierTotal,
+    fetchAllCashiersTotal,
+    fetchProductSoldCount
+ } from "@/lib/fetchStats/fetchEmployeeCheckStats";
+
 import { useRouter } from 'next/navigation';
 
 export default function StatsQueries() {
@@ -27,6 +33,13 @@ export default function StatsQueries() {
     const [lowerEndQuantity, setlowerEndQuantity] = useState<number>(0);// Default Promotional is 'true'
     const [categoryProductInfo, setCategoryProductInfo] = useState<any[]>([]);
     const [allCategories, setAllCategories] = useState<any[]>([]);
+
+    const [cashierTotal, setCashierTotal] = useState<number | null>(null);
+    const [allCashiersTotal, setAllCashiersTotal] = useState<any[]>([]);
+    const [productSoldCount, setProductSoldCount] = useState<number | null>(null);
+
+    const [startDate, setStartDate] = useState<string>('');
+    const [endDate, setEndDate] = useState<string>('');
 
   // useEffect to load data once when component mounts
   useEffect(() => {
@@ -87,14 +100,45 @@ useEffect(() => {
     fetchCategoryInfo();
 }, [lowerEndQuantity]); // Runs whenever lowerEndQuantity changes
 
-  const handleMetricChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setMetric(event.target.value as 'revenue' | 'quantity');
-  };  
+useEffect(() => {
+    if (startDate) {
+        fetchStatistics();
+    }
+}, [startDate]);
 
-  const handlePromotionalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+const fetchStatistics = async () => {
+    // Fetch cashier total
+    const cashierId = ''; // Provide the cashier ID here if needed
+    const cashierTotalResult = await fetchCashierTotal(cashierId, startDate, endDate);
+    setCashierTotal(cashierTotalResult);
+
+    // Fetch all cashiers total
+    const allCashiersTotalResult = await fetchAllCashiersTotal(startDate, endDate);
+    setAllCashiersTotal(allCashiersTotalResult);
+
+    // Fetch product sold count
+    const productId = ''; // Provide the product ID here
+    const productSoldCountResult = await fetchProductSoldCount(productId, startDate, endDate);
+    setProductSoldCount(productSoldCountResult);
+};
+
+const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStartDate(event.target.value);
+};
+
+const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEndDate(event.target.value);
+};
+
+const handleMetricChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setMetric(event.target.value as 'revenue' | 'quantity');
+};  
+
+const handlePromotionalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setIncludePromotional(event.target.value === 'true');
 };
-  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setlowerEndQuantity(Number(event.target.value));
 };
 
@@ -229,6 +273,48 @@ const handleReportsClick = () => {
                             </Flex>
                         ))}
                     </Flex>
+                </Box>
+            </Box>
+            <Box bg="white" py={10} maxW="1000px" mx="auto" px="100" mb="50px" borderRadius="15px">
+                <Flex justifyContent="center" mb={4}>
+                    <Input
+                        type="date"
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                        max="9999-12-31"
+                        min="1000-01-01"
+                    />
+                    <Input
+                        type="date"
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                        max="9999-12-31"
+                        min="1000-01-01"
+                    />
+                </Flex>
+
+                <Box>
+                    {/* Block 1: Total amount of goods sold by a particular cashier */}
+                    <Heading as="h2" fontSize="xl" mb={4}>
+                        Total Amount of Goods Sold by a Cashier
+                    </Heading>
+                    <Text>{cashierTotal !== null ? `$${cashierTotal}` : 'Loading...'}</Text>
+                </Box>
+
+                <Box mt={8}>
+                    {/* Block 2: Total amount of goods sold by all cashiers */}
+                    <Heading as="h2" fontSize="xl" mb={4}>
+                        Total Amount of Goods Sold by All Cashiers
+                    </Heading>
+                    <Text>{allCashiersTotal !== null ? `$${allCashiersTotal}` : 'Loading...'}</Text>
+                </Box>
+
+                <Box mt={8}>
+                    {/* Block 3: Total number of units of a certain product sold */}
+                    <Heading as="h2" fontSize="xl" mb={4}>
+                        Total Number of Units of a Certain Product Sold
+                    </Heading>
+                    <Text>{productSoldCount !== null ? `${productSoldCount} units` : 'Loading...'}</Text>
                 </Box>
             </Box>
         </Box>
