@@ -26,6 +26,7 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [inStock, setInStock] = useState(true);
+  const [viewPromotional, setViewPromotional] = useState('');
   const [sort, setSort] = useState('');
 
   useEffect(() => {
@@ -43,16 +44,13 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
         (params.get('categories') || '').split(',').filter(Boolean).map(Number)
       );
       setInStock(params.get('inStock') === 'true');
+      setViewPromotional(params.get('viewPromotional') || '');
       setSort(params.get('sort') || '');
     }
   }, [prevQuery]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-  };
-
-  const handleSliderChange = (value: number[]) => {
-    setPriceRange(value);
   };
 
   const handleCategoryChange = (categoryNumber: number) => {
@@ -65,6 +63,10 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
 
   const handleInStockChange = () => {
     setInStock(!inStock);
+  };
+
+  const handleViewPromotionalChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setViewPromotional(event.target.value);
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -80,6 +82,7 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
         maxPrice: priceRange[1],
         categories: selectedCategories.join(','),
         inStock,
+        viewPromotional,
         sort,
       };
 
@@ -159,6 +162,16 @@ export default function FilterBlock ({ categories, prevQuery }: FilterBlockProps
           In stock
         </Checkbox>
       </Box>
+
+
+      <Box mb={4}>
+        <Text mb={2}>View Promo:</Text>
+        <Select value={viewPromotional} onChange={handleViewPromotionalChange} bg="white" borderColor="gray.300">
+          <option value="">Show all</option>
+          <option value="promo">Promotional</option>
+          <option value="no-promo">Non prmotional</option>
+        </Select>
+      </Box> 
 
       <Box mb={4}>
         <Text mb={2}>Sort by:</Text>
