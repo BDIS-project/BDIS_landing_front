@@ -128,6 +128,11 @@ export default function Header() {
           <Text color="white" fontSize="x" fontWeight="semibold">
             {isAuthenticated ? `Hi, ${role} ${username}!` : 'Welcome!'}
           </Text>
+          <Link href="/pages/products" passHref>
+              <Button variant="link" textColor="white" mx={4}>
+                {'>>>'}  Check Products
+              </Button>
+            </Link>
         </Flex>
       </Box>
     </Box>
