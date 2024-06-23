@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Box, Heading, Text, Input, Flex, Select, Button } from '@chakra-ui/react';
-import { Employee, EmployeeList } from '@/interfaces';
+import { Employee, EmployeeList, Product, ProductList } from '@/interfaces';
 
 import { fetchCategoriesSummary } from "@/lib/fetchStats/fetchCategoriesSummary";
 import { fetchSoldEveryProduct } from "@/lib/fetchStats/fetchSoldEveryProduct";
@@ -14,6 +14,7 @@ import { fetchAllCategories } from "@/lib/fetchStats/fetchAllCategories";
 import { fetchCategoryProductInfo } from "@/lib/fetchStats/fetchCategoryProductInfo";
 
 import { fetchEmployees } from '@/lib/fetchEmployees';
+import { fetchProducts } from '@/lib/fetchProducts';
 
 import { 
     fetchCashierTotal,
@@ -44,8 +45,10 @@ export default function StatsQueries() {
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
     const [chosenCashier, setChosenCashier] = useState<string>('');
+    const [chosenProduct, setChosenProduct] = useState<string>('');
 
     const [cashiers, setCashiers] = useState<EmployeeList>([]);
+    const [products, setProducts] = useState<ProductList>([]);
 
   // useEffect to load data once when component mounts
   useEffect(() => {
@@ -75,12 +78,18 @@ export default function StatsQueries() {
         }
     };
 
-
+    const fetchProductsData = async () => {
+        const productsData = await fetchProducts();
+        if (productsData) {
+            setProducts(productsData.productList);
+        }
+    };
 
       fetchSold();
       fetchAllSold();
       fetchAllCategoriesData();
       fetchCashiersData();
+      fetchProductsData();
   }, []); 
 
   useEffect(() => {
@@ -120,7 +129,7 @@ useEffect(() => {
     if (startDate) {
         fetchStatistics();
     }
-}, [startDate, endDate, chosenCashier]);
+}, [startDate, endDate, chosenCashier, chosenProduct]);
 
 const fetchStatistics = async () => {
     // Fetch cashier total
@@ -132,8 +141,7 @@ const fetchStatistics = async () => {
     setAllCashiersTotal(allCashiersTotalResult);
 
     // Fetch product sold count
-    const productId = ''; // Provide the product ID here
-    const productSoldCountResult = await fetchProductSoldCount(productId, startDate, endDate);
+    const productSoldCountResult = await fetchProductSoldCount(chosenProduct, startDate, endDate);
     setProductSoldCount(productSoldCountResult);
 };
 
@@ -166,6 +174,10 @@ const handleSelectCashierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setChosenCashier(value)
 };
 
+const handleSelectProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setChosenProduct(value)
+};
 
     return (
         <Box>
@@ -342,8 +354,17 @@ const handleSelectCashierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 </Box>
 
                 <Box mt={8}>
-                    <Select>
-                        
+                <Select
+                        name="category-number"
+                        value={chosenProduct}
+                        onChange={handleSelectProductChange}
+                        placeholder="Select Product"
+                    >
+                        {products.map((product: Product) => (
+                            <option key={product.upc} value={product.id_product}>
+                                {product.product_name}
+                            </option>
+                        ))}
                     </Select>
                     {/* Block 3: Total number of units of a certain product sold */}
                     <Heading as="h2" fontSize="xl" mb={4}>

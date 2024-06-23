@@ -54,7 +54,7 @@ export async function fetchProductSoldCount(productId: string, startDate: string
             { headers }
         );
         console.log('Fetched product sold count:', response.data);
-        return response.data.total_quantity_sold;
+        return response.data[0].total_quantity_sold;
     } catch (error) {
         console.error('Error fetching product sold count:', error);
         return null;
