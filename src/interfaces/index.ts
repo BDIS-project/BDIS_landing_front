@@ -37,22 +37,45 @@ export interface CartItem {
 }
 
 
+export interface CreateCheckData {
+    client: string;
+    sold_products: CartItem[];
+}
+
+
+export interface Check {
+    check_number: string;
+    id_employee: string;
+    card_number?: string;
+    print_date: string
+    sum_total: number
+    vat: number
+  }
+  
+export type CheckList = Check[];
+
 export interface CustomerCard {
-    card_number: string,
-    cust_surname: string,
-    cust_name: string,
-    cust_patronymic?: null,
-    phone_number: string,
-    city?: string,
-    street?: string,
-    zip_code?: string,
-    percent: number
+    card_number: string;
+    cust_surname: string;
+    cust_name: string;
+    cust_patronymic?: string;
+    phone_number: string;
+    city?: string;
+    street?: string;
+    zip_code?: string;
+    percent: number;
 }
 
 export type CustomerCardList = CustomerCard[];
 
-
-export interface CreateCheckData {
-    client: string;
-    sold_products: CartItem[];
+export interface PostCustomerCard {
+    'card-number': string;
+    surname: string;
+    name: string;
+    patronymic?: string;
+    phone: string;
+    city?: string;
+    street?: string;
+    'zip-code'?: string;
+    percent: number;
 }

@@ -10,12 +10,18 @@ export default function CreateCategoryPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     const handleCreate = async () => {
         setLoading(true);
-        await createCategory(name);
+        const response = await createCategory(name);
         setLoading(false);
-        router.push('/pages/admin/system/categories'); // Redirect to categories list after creation
+
+        if ('error' in response) {
+            setError(response.error);
+        } else {
+            router.push('/pages/admin/system/categories'); // Redirect to categories list after creation
+        }
     };
 
     return (
